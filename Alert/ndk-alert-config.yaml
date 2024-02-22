@@ -12,128 +12,115 @@ spec:
     rules:
     - alert: ApplicationSnapshotCreationFailed
       annotations:
-        description: "Snapshot cannot be created since referenced Application is getting deleted. {{$labels.event_message}}"
+        description: “ApplicatioSnapshot cannot be created since referenced Application is getting deleted”
         summary: "ApplicationSnapshot creation failed."
       expr: |
-        kubernetes_events{container="prometheus-k8s-events-exporter", event_reason="ApplicationNotReady", event_type="Warning"} >= 0
-      for: 1s
+        kube_event_unique_events_total{container="prometheus-k8s-events-exporter", reason="ApplicationNotReady", type="Warning"} >= 0
       labels:
         severity: critical
     - alert: ApplicationSnapshotCreationFailed
       annotations:
-        description: “Application snapshot creation failed, investigate potential issues with permissions, storage availability, network connectivity, and system resources.”
+        description: “ApplicationSnapshot creation failed, investigate potential issues with permissions, storage availability, network connectivity, and system resources.”
         summary: "ApplicationSnapshot creation failed."
       expr: |
-        kubernetes_events{container="prometheus-k8s-events-exporter", event_reason="ApplicationSnapshotCreationFailed", event_type="Warning"} >= 0
-      for: 1s
+        kube_event_unique_events_total{container="prometheus-k8s-events-exporter", reason="ApplicationSnapshotCreationFailed", type="Warning"} >= 0
       labels:
         severity: critical
   - name: ndk-replication-failure-rules
     rules:
     - alert: VolumeSnapshotReplicationFailed
       annotations:
-        description: "{{ $labels.event_message }}"
+        description: "Failed to replicate volume snapshots."
         summary: "Failed replicating VolumeSnapshot."
       expr: |
-        kubernetes_events{container="prometheus-k8s-events-exporter", event_reason="VolumeSnapshotReplicationFailed", event_type="Warning"} >= 0
-      for: 1s
+        kube_event_unique_events_total{container="prometheus-k8s-events-exporter", reason="VolumeSnapshotReplicationFailed", type="Warning"} >= 0
       labels:
         severity: critical
      - alert: VolumeSnapshotReplicationRetriesExhausted
       annotations:
-        description: "{{ $labels.event_message }}"
+        description: "Failed to replicate volume snapshots"
         summary: "Exhausted retries on replicating VolumeSnapshot."
       expr: |
-        kubernetes_events{container="prometheus-k8s-events-exporter", event_reason="VolumeSnapshotReplicationRetriesExhausted", event_type="Warning"} >= 0
-      for: 1s
+        kube_event_unique_events_total{container="prometheus-k8s-events-exporter", reason="VolumeSnapshotReplicationRetriesExhausted", type="Warning"} >= 0
       labels:
         severity: critical
      - alert: UnexpectedAnnotationValue
       annotations:
-        description: "{{ $labels.event_message }}"
+        description: "Found unexpected annotation value in ApplicationSnapshot for key "replicatedTargetStorageEndpoints"."
         summary: "Unexpected annotation value."
       expr: |
-        kubernetes_events{container="prometheus-k8s-events-exporter", event_reason="Unexpected annotation value", event_type="Warning"} >= 0
-      for: 1s
+        kube_event_unique_events_total{container="prometheus-k8s-events-exporter", reason="Unexpected annotation value", type="Warning"} >= 0
       labels:
         severity: critical
      - alert: ApplicationSnapshotReplicationFailed
       annotations:
-        description: "{{ $labels.event_message }}"
+        description: "Cannot perform multiple replications of snapshot to same storage backend."
         summary: "Failed replicating ApplicationSnapshot."
       expr: |
-        kubernetes_events{container="prometheus-k8s-events-exporter", event_reason="ApplicationSnapshotReplication failed", event_type="Warning"} >= 0
-      for: 1s
+        kube_event_unique_events_total{container="prometheus-k8s-events-exporter", reason="ApplicationSnapshotReplication failed", type="Warning"} >= 0
       labels:
         severity: critical
   - name: ndk-restore-failure-rules
     rules:
     - alerts: RestoringVolumesFailed
       annotations: 
-        description: "Failed to restore volumes. {{$labels.event_message}}"
+        description: "Failed to restore volumes. Check the resource's 'status.error' field to see the reason."
         summary: "Failed to restore volumes."
       expr: |
-        kubernetes_events{container="prometheus-k8s-events-exporter", event_reason="RestoringVolumesFailed", event_type="Warning"} >= 0
-      for: 1s
+        kube_event_unique_events_total{container="prometheus-k8s-events-exporter", reason="RestoringVolumesFailed", type="Warning"} >= 0
       labels: 
         severity: critical 
     - alerts: RestoringApplicationConfigFailed
       annotations: 
-        description: "Failed to restore application config. {{$labels.event_message}}"
+        description: "Failed to restore application config. Check the resource's 'status.error' field to see the reason."
         summary: "Failed to restore application config."
       expr: |
-        kubernetes_events{container="prometheus-k8s-events-exporter", event_reason="RestoringApplicationConfigFailed", event_type="Warning"} >= 0
-      for: 1s
+        kube_event_unique_events_total{container="prometheus-k8s-events-exporter", reason="RestoringApplicationConfigFailed", type="Warning"} >= 0
       labels: 
         severity: critical 
     - alerts: PrechecksFailed
       annotations: 
-        description: "Prechecks failed during restore. {{$labels.event_message}}"
+        description: "Prechecks failed during restore. Check the resource's 'status.error' field to see the reason."
         summary: "Prechecks failed during restore."
       expr: |
-        kubernetes_events{container="prometheus-k8s-events-exporter", event_reason="PrechecksFailed", event_type="Warning"} >= 0
-      for: 1s
+        kube_event_unique_events_total{container="prometheus-k8s-events-exporter", reason="PrechecksFailed", type="Warning"} >= 0
       labels: 
         severity: critical 
   - name: ndk-retention-control-failure-rules
     rules:
     - alert: RetentionEnforcementFailed
       annotations: 
-        description: "{{$labels.event_message}}"
+        description: "Failed to delete the object as per the object retention policy."
         summary: "Failed during retention enforcement."
       expr: |
-        kubernetes_events{container="prometheus-k8s-events-exporter", event_reason="RetentionEnforcementFailed", event_type="Warning"} >= 0
-      for: 1s
+        kube_event_unique_events_total{container="prometheus-k8s-events-exporter", reason="RetentionEnforcementFailed", type="Warning"} >= 0
       labels:
         severity: critical
   - name: ndk-remote/replication-target-failure-rules
     rules:
     - alert: RemoteClusterUnreachable
       annotations:
-        description: "Triggered when the remote cluster is unreachable or its status is unknown, preventing replication. EventMessage: {{$labels.event_message}}"
+        description: "Triggered when the remote cluster is unreachable or its status is unknown, preventing replication."
         summary: "Cannot reach or determine status of the remote cluster."
       expr: |
-        kubernetes_events{container="prometheus-k8s-events-exporter", event_reason="UnreachableOrUnknown", event_kind="replicationtarget", event_type="Warning"} >= 0
-      for: 1s
+        kube_event_unique_events_total{container="prometheus-k8s-events-exporter", reason="UnreachableOrUnknown", event_kind="replicationtarget", type="Warning"} >= 0
       labels:
         severity: critical
     - alert: RemoteClusterUnhealthy.
       annotations:
-        description: "Raised when the remote cluster is reachable but found to be unhealthy, affecting replication. EventMessage: {{$labels.event_message}}"
+        description: "Raised when the remote cluster is reachable but found to be unhealthy, affecting replication."
         summary: "Remote cluster is reachable but unhealthy."
       expr: |
-        kubernetes_events{container="prometheus-k8s-events-exporter", event_reason="ReachableButNotHealthy", event_kind="replicationtarget", event_type="Warning"} >= 0
-      for: 1s
+        kube_event_unique_events_total{container="prometheus-k8s-events-exporter", reason="ReachableButNotHealthy", event_kind="replicationtarget", type="Warning"} >= 0
       labels:
         severity: critical
   - name: ndk-api-auth-failure-rules
     rules:
     - alert: PCAuthenticationFailed
       annotations:
-        description: "Authentication to storage infrastructure failed. {{$labels.event_message}}"
+        description: "Authentication to storage infrastructure failed."
         summary: "PC authentication failed."
       expr: |
-        kubernetes_events{container="prometheus-k8s-events-exporter", event_reason="PCAuthenticationFailed", event_type="Warning"} >= 0
-      for: 1s
+        kube_event_unique_events_total{container="prometheus-k8s-events-exporter", reason="PCAuthenticationFailed", type="Warning"} >= 0
       labels:
         severity: critical
