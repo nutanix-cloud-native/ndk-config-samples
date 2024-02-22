@@ -78,6 +78,6 @@ spec:
 ```
 </br>
 
-These steps ensure that Prometheus-k8s-event-exporter is properly configured and integrated with Prometheus for event monitoring within your Kubernetes cluster. Once you've completed the setup steps outlined above, you can verify the integration of events from your cluster into Prometheus by querying the kubernetes_events metric in the Prometheus UI.
+These steps ensure that Prometheus-k8s-event-exporter is properly configured and integrated with Prometheus for event monitoring within your Kubernetes cluster. Once you've completed the setup steps outlined above, you can verify the integration of events from your cluster into Prometheus by querying the kube_event_unique_events_total metric in the Prometheus UI.
 
 ##
