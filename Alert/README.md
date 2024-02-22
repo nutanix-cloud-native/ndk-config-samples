@@ -47,7 +47,7 @@ helm -n ntnx-system repo add deliveryhero https://charts.deliveryhero.io/
 
 2. Install Prometheus-k8s-event-exporter with default values:
 ```helm
-helm -n ntnx-system install deliveryhero/prometheus-k8s-events-exporter --generate-name
+helm -n ntnx-system install deliveryhero/prometheus-k8s-events-exporter --generate-name --set image.tag="v1.0.0"
 ```
 </br>
 
