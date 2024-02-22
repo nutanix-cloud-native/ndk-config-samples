@@ -70,7 +70,7 @@ spec:
     rules:
     - alerts: RestoringVolumesFailed
       annotations: 
-        description: "Failed to restore volumes. Check the resource's 'status.error' field to see the reason."
+        description: "Failed to restore volumes. {{$labels.event_message}}"
         summary: "Failed to restore volumes."
       expr: |
         kubernetes_events{container="prometheus-k8s-events-exporter", event_reason="RestoringVolumesFailed", event_type="Warning"} >= 0
@@ -79,7 +79,7 @@ spec:
         severity: critical 
     - alerts: RestoringApplicationConfigFailed
       annotations: 
-        description: "Failed to restore application config. Check the resource's 'status.error' field to see the reason."
+        description: "Failed to restore application config. {{$labels.event_message}}"
         summary: "Failed to restore application config."
       expr: |
         kubernetes_events{container="prometheus-k8s-events-exporter", event_reason="RestoringApplicationConfigFailed", event_type="Warning"} >= 0
@@ -88,7 +88,7 @@ spec:
         severity: critical 
     - alerts: PrechecksFailed
       annotations: 
-        description: "Prechecks failed during restore. Check the resource's 'status.error' field to see the reason."
+        description: "Prechecks failed during restore. {{$labels.event_message}}"
         summary: "Prechecks failed during restore."
       expr: |
         kubernetes_events{container="prometheus-k8s-events-exporter", event_reason="PrechecksFailed", event_type="Warning"} >= 0
@@ -130,7 +130,7 @@ spec:
     rules:
     - alert: PCAuthenticationFailed
       annotations:
-        description: "Authentication to storage infrastructure failed"
+        description: "Authentication to storage infrastructure failed. {{$labels.event_message}}"
         summary: "PC authentication failed."
       expr: |
         kubernetes_events{container="prometheus-k8s-events-exporter", event_reason="PCAuthenticationFailed", event_type="Warning"} >= 0
