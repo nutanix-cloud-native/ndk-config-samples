@@ -1,0 +1,126 @@
+apiVersion: monitoring.coreos.com/v1
+kind: PrometheusRule
+metadata:
+  labels:
+    prometheus: k8s
+    role: alert-rules
+  name: ndk-event-rules
+  namespace: ntnx-system
+spec:
+  groups:
+  - name: ndk-snapshot-failure-rules
+    rules:
+    - alert: ApplicationSnapshotCreationFailed
+      annotations:
+        description: “ApplicatioSnapshot cannot be created since referenced Application is getting deleted”
+        summary: "ApplicationSnapshot creation failed."
+      expr: |
+        kube_event_unique_events_total{container="prometheus-k8s-events-exporter", reason="ApplicationNotReady", type="Warning"} >= 0
+      labels:
+        severity: critical
+    - alert: ApplicationSnapshotCreationFailed
+      annotations:
+        description: “ApplicationSnapshot creation failed, investigate potential issues with permissions, storage availability, network connectivity, and system resources.”
+        summary: "ApplicationSnapshot creation failed."
+      expr: |
+        kube_event_unique_events_total{container="prometheus-k8s-events-exporter", reason="ApplicationSnapshotCreationFailed", type="Warning"} >= 0
+      labels:
+        severity: critical
+  - name: ndk-replication-failure-rules
+    rules:
+    - alert: VolumeSnapshotReplicationFailed
+      annotations:
+        description: "Failed to replicate volume snapshots."
+        summary: "Failed replicating VolumeSnapshot."
+      expr: |
+        kube_event_unique_events_total{container="prometheus-k8s-events-exporter", reason="VolumeSnapshotReplicationFailed", type="Warning"} >= 0
+      labels:
+        severity: critical
+     - alert: VolumeSnapshotReplicationRetriesExhausted
+      annotations:
+        description: "Failed to replicate volume snapshots"
+        summary: "Exhausted retries on replicating VolumeSnapshot."
+      expr: |
+        kube_event_unique_events_total{container="prometheus-k8s-events-exporter", reason="VolumeSnapshotReplicationRetriesExhausted", type="Warning"} >= 0
+      labels:
+        severity: critical
+     - alert: UnexpectedAnnotationValue
+      annotations:
+        description: "Found unexpected annotation value in ApplicationSnapshot for key "replicatedTargetStorageEndpoints"."
+        summary: "Unexpected annotation value."
+      expr: |
+        kube_event_unique_events_total{container="prometheus-k8s-events-exporter", reason="Unexpected annotation value", type="Warning"} >= 0
+      labels:
+        severity: critical
+     - alert: ApplicationSnapshotReplicationFailed
+      annotations:
+        description: "Cannot perform multiple replications of snapshot to same storage backend."
+        summary: "Failed replicating ApplicationSnapshot."
+      expr: |
+        kube_event_unique_events_total{container="prometheus-k8s-events-exporter", reason="ApplicationSnapshotReplication failed", type="Warning"} >= 0
+      labels:
+        severity: critical
+  - name: ndk-restore-failure-rules
+    rules:
+    - alerts: RestoringVolumesFailed
+      annotations: 
+        description: "Failed to restore volumes. Check the resource's 'status.error' field to see the reason."
+        summary: "Failed to restore volumes."
+      expr: |
+        kube_event_unique_events_total{container="prometheus-k8s-events-exporter", reason="RestoringVolumesFailed", type="Warning"} >= 0
+      labels: 
+        severity: critical 
+    - alerts: RestoringApplicationConfigFailed
+      annotations: 
+        description: "Failed to restore application config. Check the resource's 'status.error' field to see the reason."
+        summary: "Failed to restore application config."
+      expr: |
+        kube_event_unique_events_total{container="prometheus-k8s-events-exporter", reason="RestoringApplicationConfigFailed", type="Warning"} >= 0
+      labels: 
+        severity: critical 
+    - alerts: PrechecksFailed
+      annotations: 
+        description: "Prechecks failed during restore. Check the resource's 'status.error' field to see the reason."
+        summary: "Prechecks failed during restore."
+      expr: |
+        kube_event_unique_events_total{container="prometheus-k8s-events-exporter", reason="PrechecksFailed", type="Warning"} >= 0
+      labels: 
+        severity: critical 
+  - name: ndk-retention-control-failure-rules
+    rules:
+    - alert: RetentionEnforcementFailed
+      annotations: 
+        description: "Failed to delete the object as per the object retention policy."
+        summary: "Failed during retention enforcement."
+      expr: |
+        kube_event_unique_events_total{container="prometheus-k8s-events-exporter", reason="RetentionEnforcementFailed", type="Warning"} >= 0
+      labels:
+        severity: critical
+  - name: ndk-remote/replication-target-failure-rules
+    rules:
+    - alert: RemoteClusterUnreachable
+      annotations:
+        description: "Triggered when the remote cluster is unreachable or its status is unknown, preventing replication."
+        summary: "Cannot reach or determine status of the remote cluster."
+      expr: |
+        kube_event_unique_events_total{container="prometheus-k8s-events-exporter", reason="UnreachableOrUnknown", event_kind="replicationtarget", type="Warning"} >= 0
+      labels:
+        severity: critical
+    - alert: RemoteClusterUnhealthy.
+      annotations:
+        description: "Raised when the remote cluster is reachable but found to be unhealthy, affecting replication."
+        summary: "Remote cluster is reachable but unhealthy."
+      expr: |
+        kube_event_unique_events_total{container="prometheus-k8s-events-exporter", reason="ReachableButNotHealthy", event_kind="replicationtarget", type="Warning"} >= 0
+      labels:
+        severity: critical
+  - name: ndk-api-auth-failure-rules
+    rules:
+    - alert: PCAuthenticationFailed
+      annotations:
+        description: "Authentication to storage infrastructure failed."
+        summary: "PC authentication failed."
+      expr: |
+        kube_event_unique_events_total{container="prometheus-k8s-events-exporter", reason="PCAuthenticationFailed", type="Warning"} >= 0
+      labels:
+        severity: critical
