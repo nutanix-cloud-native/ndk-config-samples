@@ -78,6 +78,10 @@ spec:
 ```
 </br>
 
-These steps ensure that Prometheus-k8s-event-exporter is properly configured and integrated with Prometheus for event monitoring within your Kubernetes cluster. Once you've completed the setup steps outlined above, you can verify the integration of events from your cluster into Prometheus by querying the kube_event_unique_events_total metric in the Prometheus UI.
+These steps ensure that Prometheus-k8s-event-exporter is properly configured and integrated with Prometheus for event monitoring within your Kubernetes cluster. Once you've completed the setup steps outlined above, you can verify the integration of events from your cluster into Prometheus by querying the `kube_event_unique_events_total` metric in the Prometheus UI.
+</br>
+</br>
 
-##
+## Configuring Alerts for Your Application
+
+To configure alerts for NDK, you will need to apply the `ndk-alert-config.yaml` file to your Kubernetes cluster. Before proceeding with the application of this YAML configuration for the PrometheusRule object, it's essential to ensure that you provide the necessary label required by your Prometheus configuration. This label enables Prometheus to select the PrometheusRule object present in the cluster if there is a corresponding PrometheusRule selector rule defined in the Prometheus Custom Resource Definition (CRD).
