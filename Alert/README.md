@@ -12,7 +12,7 @@ Before proceeding with setting up alerts, ensure that the Prometheus Operator is
 
 ## Configuring Prometheus-Operator
 
-In order to view the alerts raised, it's necessary to access the Prometheus UI. This can be achieved by exposing the prometheus-operated service present in the ntnx-system namespace of the cluster. Below are the steps to expose the service and access the Prometheus UI:
+To verify the configuration of the event-exporter, it is imperative to access the Prometheus UI. This can be accomplished by exposing the prometheus-operated service located within the ntnx-system namespace of the cluster. The following steps outline the procedure to expose the service and access the Prometheus UI:
 
 </br>
 
@@ -31,7 +31,7 @@ kubectl -n ntnx-system get nodes -o wide
 * You can find the exposed port in the port section of the prometheus-operated-ext service.
 </br>
 
-With the Node IP and the exposed port, you can now access the Prometheus UI by entering the provided address in your web browser. This grants you access to monitor and review the alerts raised within your Kubernetes environment.
+Now that you have the Node IP and the exposed port, you can proceed to access the Prometheus UI by entering the provided address into your web browser's address bar. This step enables you to verify if the event-exporter is configured correctly and if Prometheus recognizes it as a target.
 </br>
 </br>
 
