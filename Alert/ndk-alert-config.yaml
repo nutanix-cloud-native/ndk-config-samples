@@ -124,3 +124,11 @@ spec:
         kube_event_unique_events_total{container="prometheus-k8s-events-exporter", reason="PCAuthenticationFailed", type="Warning"} >= 0
       labels:
         severity: critical
+    - alert: StorageInfraAuthenticationFailed
+      annotations:
+        description: "Authentication to storage infrastructure failed."
+        summary: "PC authentication failed."
+      expr: |
+        kube_event_unique_events_total{container="prometheus-k8s-events-exporter", reason="StorageInfraAuthenticationFailed", type="Warning"} >= 0
+      labels:
+        severity: critical
