@@ -127,7 +127,7 @@ spec:
     - alert: StorageInfraAuthenticationFailed
       annotations:
         description: "Authentication to storage infrastructure failed."
-        summary: "PC authentication failed."
+        summary: "StorageInfra authentication failed."
       expr: |
         kube_event_unique_events_total{container="prometheus-k8s-events-exporter", reason="StorageInfraAuthenticationFailed", type="Warning"} >= 0
       labels:
