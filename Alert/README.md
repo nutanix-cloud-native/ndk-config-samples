@@ -85,3 +85,10 @@ These steps ensure that Prometheus-k8s-event-exporter is properly configured and
 ## Configuring Alerts for Your Application
 
 To configure alerts for NDK, you will need to apply the `ndk-alert-config.yaml` file to your Kubernetes cluster. Before proceeding with the application of this YAML configuration for the PrometheusRule object, it's essential to ensure that you provide the necessary label required by your Prometheus configuration. This label enables Prometheus to select the PrometheusRule object present in the cluster if there is a corresponding PrometheusRule selector rule defined in the Prometheus Custom Resource Definition (CRD).
+
+## Limitations for NDK Alerts
+
+When configuring alerts for NDK, it's vital to understand that these alerts are based on events, which have a lifespan of only one hour after the alert is raised. Consequently, the status of an alert once it starts firing may not accurately reflect the current state of the system. Even if the underlying issue is resolved, the alert will persist for the duration of one hour. Conversely, if the issue remains unresolved, the alert will disappear from the Prometheus UI after the same time frame. Therefore, it's imperative to prioritize the presence of the alert itself rather than solely relying on its status to determine whether action needs to be taken.
+</br>
+
+Additionally, you will receive resolved notifications for alerts after one hour. To address this issue and avoid receiving potentially misleading resolved notifications, it is advisable to either ignore the resolved alerts notification specifically coming from NDK alerts or set the `sendResolved` flag to `false` the AlertmanagerConfig object used for integrating alerts with third-party systems. However, it's essential to note that disabling this flag will prevent you from receiving all resolved alerts notifications, not just those related to NDK alerts.
