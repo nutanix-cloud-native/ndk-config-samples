@@ -1,5 +1,5 @@
 # NDK-config-samples
-Thank you for choosing NDK! In this repository, you will find sample configurations that are designed to seamlessly integrate with our product. These sample configurations are provided to help you get started quickly and effectively configure your environment to leverage the full potential of our product.
+Thank you for choosing Nutanix Data Services for Kubernetes (NDK)! This repository stores sample configurations that are designed to seamlessly integrate with NDK. These sample configurations serve as a great starting point to configure your environment and leverage the full potential of NDK
 
-## Sample Configurations
-Within the Alerts folder, you'll discover sample configuration files tailored specifically for our product. Feel free to explore these configurations and customize them to suit your specific needs.
+## Alert Configurations
+Within the Alerts folder, you'll discover sample configuration files composed to detect critical error conditions and fire alerts for NDK. Feel free to explore these configurations and customize them to suit your specific needs.
